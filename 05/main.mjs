@@ -21,14 +21,15 @@ const deltas = segment => {
 };
 
 const allPointsInSegment = segment => {
-  const last = a => a.slice(-1)[0];
+  const [a, b] = segment;
   const [dx, dy] = deltas(segment);
+
+  const last = a => a.slice(-1)[0];
   const nextPoint = p =>  [ p[0] + dx, p[1] + dy ];
-  const [a,b] = segment;
 
   function generate(points) {
     const prev = last(points);
-    return eq(b,prev) ? points : generate(points.concat([nextPoint(prev)]));
+    return eq(b, prev) ? points : generate(points.concat(Array.of(nextPoint(prev))));
   }
   return generate([a]);
 };
