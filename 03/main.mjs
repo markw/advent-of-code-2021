@@ -23,7 +23,7 @@ const range = n => Array.from(Array(n).keys());
 
 const hexToInt = s => parseInt(s,2);
 
-function bitFrequencies(pos) {
+function bitFrequencies(pos, input) {
   function tally(acc,ch) {
     const obj = (ch === "1") ? {"1":1+acc[1]} : {"0":1+acc[0]};
     return Object.assign(acc, obj);
@@ -38,8 +38,23 @@ function gammaAndEpslion(acc, bits) {
 }
 
 const indices = range(input[0].length);
-const { gamma, epsilon } = indices.map(bitFrequencies).reduce(gammaAndEpslion, {gamma:"", epsilon:""});
+const { gamma, epsilon } = indices.map(i=>bitFrequencies(i,input)).reduce(gammaAndEpslion, {gamma:"", epsilon:""});
 const part1 = hexToInt(gamma) * hexToInt(epsilon);
 
-console.log(part1);
+console.log("part1", part1);
 
+function calcRating(input, f) {
+  function calcRating0(remaining, pos) {
+    if (remaining.length === 1) return hexToInt(remaining[0]);
+    const freq = bitFrequencies(pos, remaining);
+    return calcRating0(remaining.filter(s=>s[pos]===f(freq)), pos + 1);
+  }
+  return calcRating0(input, 0);
+}
+
+const calcOxygenRating = input => calcRating(input, freq => (freq[1] >= freq[0]) ? "1" : "0");
+const calcCo2Rating    = input => calcRating(input, freq => (freq[1] >= freq[0]) ? "0" : "1");
+
+const oxygenRating = calcOxygenRating(input);
+const co2Rating = calcCo2Rating(input);
+console.log("part2", oxygenRating * co2Rating);
