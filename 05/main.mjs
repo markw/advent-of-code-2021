@@ -19,38 +19,21 @@ const minMax = segment => {
 };
 
 const allPointsInSegment = segment => {
+  const last = a => a.slice(-1)[0];
   const incX = p => [1 + p[0], p[1]];
   const incY = p => [p[0], 1 + p[1]];
   const [a, b] = minMax(segment);
-  const points = [];
-  let f = isHorizontal(segment) ? incX : incY;
-  let next = a;
-  do {
-    //console.log("next",next,"b",b);
-    points.push(next);
-    next = f(next);
-  } while (!eq(next,b));
-  points.push(b);
-  return points;
+  const f = isHorizontal(segment) ? incX : incY;
+
+  function generate(points) {
+    const prev = last(points);
+    return eq(b,prev) ? points : generate(points.concat([f(prev)]));
+  }
+  return generate([a]);
 };
 
 const countPoints = (counts, p) => Object.assign(counts, { [p]: 1 + (counts[p] || 0) });
 const countIntersections = (total, n) => n === 1 ? total : total + 1;
-
-/*
-const input = [
-"0,9 -> 5,9",
-"8,0 -> 0,8",
-"9,4 -> 3,4",
-"2,2 -> 2,1",
-"7,0 -> 7,4",
-"6,4 -> 2,0",
-"0,9 -> 2,9",
-"3,4 -> 1,4",
-"0,0 -> 8,8",
-"5,5 -> 8,2",
-];
-*/
 
 const input = fs.readFileSync("input.txt", "utf-8").split("\n").filter(s=>s);
 const segments = input.map(parseSegment);
