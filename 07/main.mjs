@@ -15,12 +15,8 @@ const range = (min,max) => {
 const distance = (a,b) => Math.abs(a-b);
 
 const distancePart2 = (a,b) => {
-  const dist = distance(a,b);
-  // building an array and reducing it is too slow, so it's a loop instead
-  let total = 0;
-  let n = 0;
-  while (++n <= dist) total += n;
-  return total;
+  const d = distance(a,b);
+  return d * (d + 1) / 2;
 }
 
 const fuelPart1 = positions => pos => positions.reduce((a,b)=> a + distance(pos,b), 0);
