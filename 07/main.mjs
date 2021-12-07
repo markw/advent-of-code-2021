@@ -14,7 +14,7 @@ const range = (min,max) => {
 
 const distance = (a,b) => Math.abs(a-b);
 
-const expoDistance = (a,b) => {
+const distancePart2 = (a,b) => {
   const dist = distance(a,b);
   // building an array and reducing it is too slow, so it's a loop instead
   let total = 0;
@@ -25,7 +25,7 @@ const expoDistance = (a,b) => {
 
 const fuelPart1 = positions => pos => positions.reduce((a,b)=> a + distance(pos,b), 0);
 
-const fuelPart2 = positions => pos => positions.reduce((a,b)=> a + expoDistance(pos,b), 0);
+const fuelPart2 = positions => pos => positions.reduce((a,b)=> a + distancePart2(pos,b), 0);
 
 const solve = (positions, f) => {
   const a = min(positions);
