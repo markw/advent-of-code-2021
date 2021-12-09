@@ -29,10 +29,6 @@ console.log("part 1 =", part1.length);
 
 // part 2 =========================================================
 
-const sampleEntry = "acedgfb cdfbe gcdfa fbcad dab cefabd cdfgeb eafb cagedb ab | cdfeb fcadb cdfeb cdbaf";
-const sampleEntryInputs = sampleEntry.split("|")[0].trim().split(" ");
-const sampleEntryOutputs = sampleEntry.split("|")[1].trim().split(" ");
-
 const segments = [
   "abcefg",
   "cf",
@@ -105,8 +101,6 @@ const createCharMap = segments => {
     [mapsToG]: "g",
   };
 };
-
-const charMap = createCharMap(sampleEntryInputs);
 
 const sum = (a,b) => a + b;
 const str = sum;
