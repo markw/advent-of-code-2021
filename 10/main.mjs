@@ -14,12 +14,11 @@ const sampleInput = [
 "<{([{{}}[<[[[<>{}]]]>[]]",
 ];
 
-const startChars = new Set("[{<(");;
-
-const pairs = {"(":")", "<":">", "{":"}","[":"]"};
-const scores= {")":3, "]":57, "}":1197,">":25137};
-
 const parseLine = line => {
+  const startChars = new Set("[{<(");;
+  const pairs = {"(":")", "<":">", "{":"}","[":"]"};
+  const scores= {")":3, "]":57, "}":1197,">":25137};
+
   const handleChar = (acc,ch) => {
     if (acc.score > 0) return acc;
     if (startChars.has(ch)) {
@@ -43,16 +42,19 @@ const incomplete = ({ score }) => 0 === score;
 
 const scoreToComplete = ({ stack })=> {
   const charScores = {")":1, "]":2, "}": 3, ">":4};
-  const f = (acc, stack) => {
+  const calcScore = (acc) => {
     const ch = stack.pop();
-    return ch ? f(5 * acc + charScores[ch],stack) : acc;
+    return ch ? calcScore(5 * acc + charScores[ch]) : acc;
   }
-  return f(0, stack);
+  return calcScore(0);
 }
 
-const middle = a => a.sort((a,b)=>a-b)[(a.length - 1)/ 2];
+const middle = a => a[(a.length - 1)/ 2];
 
-const part2 = lines => middle(lines.map(parseLine).filter(incomplete).map(scoreToComplete));
+const part2 = lines => {
+  const scores = lines.map(parseLine).filter(incomplete).map(scoreToComplete).sort((a,b)=>a-b);
+  return middle(scores);
+};
 
 //console.log("part 2 =", part2(sampleInput));
 console.log("part 2 =", part2(puzzleInput));
