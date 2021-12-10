@@ -1,18 +1,7 @@
 import * as fs from 'fs';
-const puzzleInput = fs.readFileSync("input.txt", "utf-8").split("\n").filter(s=>s);
-
-const sampleInput = [
-"[({(<(())[]>[[{[]{<()<>>",
-"[(()[<>])]({[<{<<[]>>(",
-"{([(<{}[<>[]}>{[]{[(<()>",
-"(((({<>}<{<{<>}{[]{[]{}",
-"[[<[([]))<([[{}[[()]]]",
-"[{[{({}]{}}([{[{{{}}([]",
-"{<[[]]>}<{[{[{[]{()[[[]",
-"[<(<(<(<{}))><([]([]()",
-"<{([([[(<>()){}]>(<<{{",
-"<{([{{}}[<[[[<>{}]]]>[]]",
-];
+const readFile = name =>fs.readFileSync(name, "utf-8").split("\n").filter(s=>s); 
+const sampleInput = readFile("sample.txt");
+const puzzleInput = readFile("input.txt");
 
 const parseLine = line => {
   const startChars = new Set("[{<(");;
