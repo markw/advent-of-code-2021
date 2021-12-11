@@ -73,8 +73,6 @@ const solvePart1 = input => {
     return { count: acc.count + next.count, grid: next.grid };
   }, {count: 0, grid});
 
-  //console.log("flashes", result.count);
-  // console.log(render(result.grid));
   return result.count;
 };
 
