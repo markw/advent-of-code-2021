@@ -16,17 +16,17 @@ const render = grid => grid.map(row=>row.join("")).join("\n");
 
 const range = n => [...Array.from({length:n}).keys()];
 
-const zip = (f,xs,ys) => {
+const cartesian = (xs,ys) => {
   const result = [];
   for (let x of xs) { 
     for (let y of ys) { 
-      result.push(f(x,y));
+      result.push([x,y]);
     }
   };
   return result;
 };
 
-const locations = zip((r,c)=>({r,c}), range(10), range(10));
+const locations = cartesian(range(10), range(10)).map(([r,c]) => ({r,c}));
 
 const neighbors = (rc) => {
   const deltas = [
