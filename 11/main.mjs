@@ -26,21 +26,15 @@ const cartesian = (xs,ys) => {
   return result;
 };
 
-const locations = cartesian(range(10), range(10)).map(([r,c]) => ({r,c}));
+const toLocation = ([r,c]) => ({r,c});
 
-const neighbors = (rc) => {
-  const deltas = [
-    {r:0,c:1},
-    {r:0,c:-1},
-    {r:1,c:1},
-    {r:1,c:0},
-    {r:1,c:-1},
-    {r:-1,c:1},
-    {r:-1,c:0},
-    {r:-1,c:-1},
-  ];
-  return deltas.map(({r,c}) => ({r: rc.r + r, c: rc.c + c}));
-};
+const locations = cartesian(range(10), range(10)).map(toLocation);
+
+const isDelta = ({r,c}) => r || c;
+
+const deltas = cartesian([-1,0,1],[-1,0,1]).map(toLocation).filter(isDelta);
+
+const neighbors = (rc) => deltas.map(({r,c}) => ({r: rc.r + r, c: rc.c + c}));
 
 const inc = n => n + 1;
 
