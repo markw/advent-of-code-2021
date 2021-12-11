@@ -76,8 +76,25 @@ const solvePart1 = input => {
   //console.log("flashes", result.count);
   // console.log(render(result.grid));
   return result.count;
-
-
 };
 
 console.log("part 1=", solvePart1(puzzleInput));
+
+const solvePart2 = input => {
+  const grid = mapCells(input, Number);
+  const result = range(1000).reduce((acc, stepNum)=> {
+    //console.log("step", stepNum, "count", acc.count);
+    if (acc.simultaneousFlashStep) return acc;
+    const next = step(acc.grid);
+    const nextAcc = { count: acc.count + next.count, grid: next.grid };
+    const isSimultaneousFlash = locations.every(rc => 0 === getCell(next.grid, rc));
+    if (isSimultaneousFlash) {
+      nextAcc.simultaneousFlashStep = stepNum + 1;
+    }
+    return nextAcc;
+  }, {count: 0, grid});
+
+  return result.simultaneousFlashStep;
+};
+
+console.log("part 2=", solvePart2(puzzleInput));
