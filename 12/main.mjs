@@ -24,16 +24,17 @@ const parseConnection = (acc,s) => {
 const connections = input.reduce(parseConnection, {});
 
 //console.log(connections);
-//
+
 const isSmall = ch => ch === ch.toLowerCase();
 
 const last = a => a.slice(-1)[0];
 
 const frequencies = a => {
-  return a.reduce((acc,ch)=>{
+  const f = (acc, ch) => {
     acc[ch] = 1 + (acc[ch] || 0);
     return acc;
-  },{});
+  };
+  return a.reduce(f, {});
 };
 
 const buildPaths = (paths, fIsIllegalPath) => {
@@ -41,8 +42,7 @@ const buildPaths = (paths, fIsIllegalPath) => {
   const addNextStep = path => {
     const prev = last(path);
     if (prev === 'end') return [path];
-    const dests = connections[prev];
-    return dests.map(dest => {
+    return connections[prev].map(dest => {
       const newPath = path.concat(dest);
       return fIsIllegalPath(newPath) ? [] : newPath;
     });
