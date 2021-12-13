@@ -51,7 +51,8 @@ const foldPaper = (setOfDots, [foldDir, foldAt]) => {
 const makeGrid = (dotPositions=[]) => {
   const numRows =  1 + maxY(dotPositions);
   const numCols =  1 + maxX(dotPositions);
-  const grid = Array.from({length:numRows}).map(_ => Array.from({length:numCols}, () => " "));
+  const makeRow = () => new Array(numCols).fill(" ");
+  const grid = new Array(numRows).fill().map(makeRow);
   [...dotPositions].map(parseDot).forEach(([x,y]) => grid[y][x] = "#");
   return grid;
 }
