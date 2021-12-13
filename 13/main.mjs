@@ -25,7 +25,6 @@ const parseInputLine = (acc, s) => {
 
 const parseInput = input => input.filter(s=>s).reduce(parseInputLine, {dots:new Set(), folds:[]});
 
-
 const foldUp = (y, dots) => {
   return dots.map(dot=> {
     if (dot[1] <= y) return dot;
@@ -49,7 +48,9 @@ const foldPaper = (setOfDots, [foldDir, foldAt]) => {
   return new Set(newDots);
 };
 
-const makeGrid = (numRows, numCols, dotPositions=[]) => {
+const makeGrid = (dotPositions=[]) => {
+  const numRows =  1 + maxY(dotPositions);
+  const numCols =  1 + maxX(dotPositions);
   const grid = Array.from({length:numRows}).map(_ => Array.from({length:numCols}, () => " "));
   [...dotPositions].map(parseDot).forEach(([x,y]) => grid[y][x] = "#");
   return grid;
@@ -72,8 +73,5 @@ const part1 = foldPaper(puzzleInput.dots, puzzleInput.folds[0]);
 console.log("part 1", part1.size);
 
 const part2 = puzzleInput.folds.reduce(foldPaper, puzzleInput.dots);
-const numRows =  1 + maxY(part2);
-const numCols =  1 + maxX(part2);
-const grid = makeGrid(numRows, numCols, part2);
 console.log("part 2");
-console.log(render(grid));
+console.log(render(makeGrid(part2)));
