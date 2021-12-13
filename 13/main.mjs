@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 const readFile = name =>fs.readFileSync(name, "utf-8").split("\n"); 
 
-const sampleInput = [ "6,10", "0,14", "9,10", "0,3", "10,4", "4,11", "6,0", "6,12", "4,1", "0,13", "10,12", "3,4", "3,0", "8,4", "1,10", "2,14", "8,10", "9,0", "", "fold along y=7", "fold along x=5", ];
+const sampleData = [ "6,10", "0,14", "9,10", "0,3", "10,4", "4,11", "6,0", "6,12", "4,1", "0,13", "10,12", "3,4", "3,0", "8,4", "1,10", "2,14", "8,10", "9,0", "", "fold along y=7", "fold along x=5", ];
 
 const isDot = s => s.includes(",");
 
@@ -14,7 +14,7 @@ const parseFold = s => {
   return Array.of(tokens[0], Number(tokens[1]));
 };
 
-const parseInput = (acc, s) => {
+const parseInputLine = (acc, s) => {
   if (isDot(s)) {
     acc.dots.add(s);
   } else {
@@ -23,9 +23,8 @@ const parseInput = (acc, s) => {
   return acc;
 };
 
-const input = readFile("input.txt").filter(s=>s).reduce(parseInput, {dots:new Set(), folds:[]});
+const parseInput = input => input.filter(s=>s).reduce(parseInputLine, {dots:new Set(), folds:[]});
 
-const sampleDots = sampleInput.filter(isDot).map(parseDot);
 
 const foldUp = (y, dots) => {
   return dots.map(dot=> {
@@ -58,13 +57,21 @@ const makeGrid = (numRows, numCols, dotPositions=[]) => {
 
 const render = grid => grid.map(row=>row.join("")).join("\n");
 
-const maxX = setOfDots => Math.max(...[...setOfDots].map(parseDot).map(d=>d[0]))
-const maxY = setOfDots => Math.max(...[...setOfDots].map(parseDot).map(d=>d[1]))
+const max = (setOfDots, fmap) => Math.max(...[...setOfDots].map(parseDot).map(fmap));
+const maxX = setOfDots => max(setOfDots, d=>d[0]);
+const maxY = setOfDots => max(setOfDots, d=>d[1]);
 
-const part1 = foldPaper(input.dots, input.folds[0]);
+const sampleInput = parseInput(sampleData);
+
+const sample = foldPaper(sampleInput.dots, sampleInput.folds[0]);
+console.log("sample", sample.size);
+
+const puzzleInput = parseInput(readFile("input.txt"));
+
+const part1 = foldPaper(puzzleInput.dots, puzzleInput.folds[0]);
 console.log("part 1", part1.size);
 
-const part2 = input.folds.reduce(foldPaper, input.dots);
+const part2 = puzzleInput.folds.reduce(foldPaper, puzzleInput.dots);
 const numRows =  1 + maxY(part2);
 const numCols =  1 + maxX(part2);
 const grid = makeGrid(numRows, numCols, part2);
