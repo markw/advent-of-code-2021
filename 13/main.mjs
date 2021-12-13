@@ -58,7 +58,7 @@ const makeGrid = (dotPositions=[]) => {
 
 const render = grid => grid.map(row=>row.join("")).join("\n");
 
-const max = (setOfDots, fmap) => Math.max(...[...setOfDots].map(parseDot).map(fmap));
+const max = (setOfDots, f) => Math.max(...[...setOfDots].map(parseDot).map(f));
 const maxX = setOfDots => max(setOfDots, d=>d[0]);
 const maxY = setOfDots => max(setOfDots, d=>d[1]);
 
