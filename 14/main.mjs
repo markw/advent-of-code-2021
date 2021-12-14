@@ -18,14 +18,6 @@ const parsePairs = s => {
   return result;
 }
 
-const interleave = (a,b) => {
-  const result = [];
-  for (let i=0; i < a.length; i++) {
-    result.push(a[i]);
-    result.push(b[i]);
-  }
-  return result.join('');
-}
 const range = n => [...Array.from({length:n}).keys()];
 
 const frequencies = x => {
