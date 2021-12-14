@@ -11,11 +11,8 @@ const parseRule = rule => {
 
 const parsePairs = s => {
   const a = Array.from(s);
-  const result = [];
-  for (let i=0; i < a.length - 1; i++) {
-    result.push(a[i] + a[i+1]);
-  }
-  return result;
+  const addPair =  (acc,i) => acc.concat(a[i] + a[i+1]);
+  return range(a.length - 1).reduce(addPair, []);
 }
 
 const range = n => [...Array.from({length:n}).keys()];
