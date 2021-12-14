@@ -21,12 +21,8 @@ const parsePairs = s => {
 const range = n => [...Array.from({length:n}).keys()];
 
 const frequencies = x => {
-  const a = Array.from(x);
-  const f = (acc, ch) => {
-    acc[ch] = 1 + (acc[ch] || 0);
-    return acc;
-  };
-  return a.reduce(f, {});
+  const f = (acc, ch) => increment(acc, ch, 1);
+  return Array.from(x).reduce(f, {});
 };
 
 const first = a => a[0];
