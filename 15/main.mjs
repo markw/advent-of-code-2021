@@ -25,57 +25,79 @@ const buildAdjacencyList = (risks, numRows, numCols) => index => {
 // based on page 527 of Introduction to Algoritms by Cormen/Leiserson/Rivest
 const dijkstra = (adjacencyList, sourceIndex) => {
 
-  const priorityQueue = d => {
-    const deleted = [];
-    const q = {
-      isNotEmpty: () => {
-        return deleted.length < d.length;
-      },
-      extractMin: () => {
-        let minDistance = Infinity;
-        let minIndex = -1;
-        /*
-        d.forEach((distance, index) => {
-          if (distance < minDistance && !deleted[index]) {
-            minDistance = distance;
-            minIndex = index;
-          }
-        });
-        */
-        // this is much faster than forEach ...sigh
-        for (var index = 0; index < d.length; index++) {
-          const distance = d[index];
-          if (distance < minDistance && !deleted[index]) {
-            minDistance = distance;
-            minIndex = index;
-          }
-        }
-        deleted[minIndex] = true;
-        return minIndex;
+  const priorityQueue = () => {
+    const heap = [];
+    const visited = [];
+
+    const parent = n => Math.floor((n-1)/2);
+    const left = n => n * 2 + 1;
+    const right = n => n * 2 + 2;
+    const weightOf = x => x ? x.weight : undefined;
+    const indexOf = x => x ? x.index : undefined;
+
+    const heapify = (n) => {
+      if (heap.length < 2) return;
+      const p = parent(n);
+      const l = left(p);
+      const r = right(p);
+      var smallest = p;
+      if (weightOf(heap[r]) < weightOf(heap[p])) smallest = r;
+      if (weightOf(heap[l]) < weightOf(heap[smallest])) smallest = l;
+      if (smallest !== p) {
+        const temp = heap[p];
+        heap[p] = heap[smallest];
+        heap[smallest] = temp;
+        heapify(p);
       }
-    }
-    return q;
+      if (heap.hasOwnProperty("-1")) throw Error(JSON.stringify(heap['-1']));
+    };
+
+    return {
+      depth: () => heap.length,
+      isNotEmpty: () => !!heap.length,
+      update: x => {
+        const existingIndex = heap.findIndex(({index})=>index===x.index);
+        if (existingIndex === -1) {
+          const len = heap.length;
+          heap[len] = x;
+          heapify(len);
+        }
+        else {
+          heap[existingIndex].weight = x.weight;
+          heapify(existingIndex);
+        }
+      },
+      extractMin: () => indexOf(heap.shift())
+    };
   };
 
   const relax = (u,v,w) => {
-    if (d[v] > d[u] + w) {
-      d[v] = d[u] + w;
+    const weight = d[u] + w;
+    const dv = d[v];
+    if (dv > weight) {
+      d[v] = weight;
+      Q.update({index: v, weight });
     }
   };
 
   const d = Array.from({length: adjacencyList.length}, () => Infinity);
   d[sourceIndex] = 0;
 
-  const Q = priorityQueue(d);
+  const Q = priorityQueue();
+  Q.update({index:sourceIndex, weight: 0});
 
   while (Q.isNotEmpty()) {
     const u = Q.extractMin();
+    //log("u",u);
     const neighbors = adjacencyList[u];
     adjacencyList[u].forEach(neighbor => {
       const w = neighbor[1];
       const v = neighbor[0];
       relax(u, v, w);
     });
+    if (u === adjacencyList.length - 1) {
+      return d;
+    }
   };
   return d;
 }
@@ -91,7 +113,7 @@ const solve = (input, builder) => {
 const buildRisksForPart1 = input => mapCells(input, Number).reduce((acc,a) => acc.concat(a), []);
 
 const sample = solve(sampleInput, buildRisksForPart1);
-log("sample", sample);
+log("part1 sample", sample);
 
 const part1 = solve(puzzleInput, buildRisksForPart1);
 log("part1", part1);
@@ -134,6 +156,3 @@ log("part2 sample", part2Sample);
 
 const part2 = solve(puzzleInput, buildRisksForPart2);
 log("part2", part2);
-
-
-
