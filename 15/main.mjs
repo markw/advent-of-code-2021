@@ -27,7 +27,6 @@ const dijkstra = (adjacencyList, sourceIndex) => {
 
   const priorityQueue = () => {
     const heap = [];
-    const visited = [];
 
     const parent = n => Math.floor((n-1)/2);
     const left = n => n * 2 + 1;
