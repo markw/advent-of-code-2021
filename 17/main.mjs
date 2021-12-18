@@ -26,7 +26,7 @@ const target = parseTargetArea(puzzleInput);
 const minYabsolute = Math.abs(target.minY);
 
 const part1 = minYabsolute * (minYabsolute - 1) / 2;
-log("part1", part1);
+log("part 1", part1);
 
 
 const findInitialVelocityX = targetX => {
