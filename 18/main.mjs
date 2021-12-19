@@ -12,11 +12,6 @@ const assertArrayEquals = (a, b, msg="Failure:") => {
   assertEquals(expected,actual,msg);
 }
 
-const addSnailFish = (x,y) => [x,y];
-
-const a = addSnailFish([[[[4,3],4],4],[7,[[8,4],9]]], [1,1]);
-assertArrayEquals([[[[[4,3],4],4],[7,[[8,4],9]]],[1,1]], a);
-
 const traverse = a => {
   const traverse0 = (accum, path, value) => {
     //log("traverse0",accum,path,value);
@@ -32,14 +27,12 @@ const dropLast = a => a.slice(0,a.length-1);
 const last = a => a.slice(-1)[0];
 
 const setValue = (a,path,value) => {
-  //log("setValue",path,value);
   if (!a || typeof(path) === "undefined") return;
   const parent = getValue(a,dropLast(path));
-  //log("parent", parent);
   parent[last(path)] = value;
 }
 
-const explode = a => {
+const explodeSnailFish = a => {
   const isNumber = x => Number.isFinite(x);
   const t = traverse(a);
   const i = t.findIndex(({path})=>path.length === 5);
@@ -63,7 +56,7 @@ const explode = a => {
 }
 
 const testExplode = (expected, input) => {
-  explode(input);
+  explodeSnailFish(input);
   assertArrayEquals(expected, input);
 }
 
@@ -72,7 +65,7 @@ testExplode( [[3,[2,[8,0]]],[9,[5,[4,[3,2]]]]], [[3,[2,[1,[7,3]]]],[6,[5,[4,[3,2
 testExplode( [[3,[2,[8,0]]],[9,[5,[7,0]]]], [[3,[2,[8,0]]],[9,[5,[4,[3,2]]]]]);
 testExplode( [[[[0,9],2],3],4], [[[[[9,8],1],2],3],4]);
 
-const split = a => {
+const splitSnailFish = a => {
   const t = traverse(a);
   const needSplit = t.find(({value})=>value > 9);
   if (!needSplit) {
@@ -86,10 +79,10 @@ const split = a => {
 };
 
 const reduceSnailFish = a => { 
-  while(explode(a) || split(a));
+  while(explodeSnailFish(a) || splitSnailFish(a));
 }
 
-const example = addSnailFish( [[[[4,3],4],4],[7,[[8,4],9]]] , [1,1] );
+const example = [[[[[4,3],4],4],[7,[[8,4],9]]] , [1,1]];
 reduceSnailFish(example);
 assertArrayEquals([[[[0,7],4],[[7,8],[6,0]]],[8,1]], example);
 
@@ -118,6 +111,11 @@ log("part 1", part1);
 
 // part 2
 
+// I can't get the same answer for this sample input
+// that is given in the instructions, but my real answer
+// for part 2 is correct.  My answer for this sample data is 4087 but
+// the instructions give 3993.  But when I add the 2 numbers
+// given in the instructions I get 3993. Hmm.
 const sampleInput = [
 [[[0,[5,8]],[[1,7],[9,6]]],[[4,[1,2]],[[1,4],2]]],
 [[[5,[2,8]],4],[5,[[9,9],0]]],
@@ -131,25 +129,31 @@ const sampleInput = [
 [[[[5,2],5],[8,[3,7]]],[[5,[7,5]],[4,4]]],
 ];
 
-const copyArray = a => {
-  return JSON.parse(JSON.stringify(a));
+const part2Input = puzzleInput.map(JSON.parse);
+//const part2Input = sampleInput;
+
+const cloneArray = a => {
+  if (typeof(a) === 'number') return a;
+  const copy = [];
+  for (let k in a) {
+    copy[k] = cloneArray(a[k]);
+  }
+  return copy;
 }
 
-const part2Input = puzzleInput.map(JSON.parse);
-
-const wtf = magnitude(addAndReduceSnailFish(sampleInput[8],sampleInput[0]));
-log("wtf", wtf);
 const magnitudes = [];
+console.time("part2");
 for (let i=0; i<part2Input.length; i++) {
   for (let j=0; j<part2Input.length; j++) {
     if (i !== j) {
-      const a = copyArray(part2Input[i]);
-      const b = copyArray(part2Input[j]);
+      const a = cloneArray(part2Input[i]);
+      const b = cloneArray(part2Input[j]);
       magnitudes.push(magnitude(addAndReduceSnailFish(a,b)));
-      //magnitudes.push(magnitude(addAndReduceSnailFish(b,a)));
+      magnitudes.push(magnitude(addAndReduceSnailFish(b,a)));
     };
   }
 }
+console.timeEnd("part2");
 magnitudes.sort((a,b)=>b-a);
 const part2 = magnitudes[0];
 log("part 2", part2);
