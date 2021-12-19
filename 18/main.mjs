@@ -12,7 +12,6 @@ const assertArrayEquals = (a, b, msg="Failure:") => {
   assertEquals(expected,actual,msg);
 }
 
-
 const addSnailFish = (x,y) => [x,y];
 
 const a = addSnailFish([[[[4,3],4],4],[7,[[8,4],9]]], [1,1]);
@@ -106,12 +105,51 @@ assertEquals(4140, magnitude([[[[6,6],[7,6]],[[7,7],[7,0]]],[[[7,7],[7,7]],[[7,8
 
 import * as fs from 'fs';
 const readFile = name =>fs.readFileSync(name, "utf-8");
-const puzzleInput = readFile("input.txt").split("\n").filter(s=>s).map(s=>JSON.parse(s));;
+const puzzleInput = readFile("input.txt").split("\n").filter(s=>s);
 
-const part1 = magnitude(puzzleInput.reduce((a,b)=>{
-  const sum = addSnailFish(a,b);
+const addAndReduceSnailFish = (a,b) => {
+  const sum = [a,b];
   reduceSnailFish(sum);
   return sum;
-}));
+};
 
+const part1 = magnitude(puzzleInput.map(JSON.parse).reduce(addAndReduceSnailFish));
 log("part 1", part1);
+
+// part 2
+
+const sampleInput = [
+[[[0,[5,8]],[[1,7],[9,6]]],[[4,[1,2]],[[1,4],2]]],
+[[[5,[2,8]],4],[5,[[9,9],0]]],
+[6,[[[6,2],[5,6]],[[7,6],[4,7]]]],
+[[[6,[0,7]],[0,9]],[4,[9,[9,0]]]],
+[[[7,[6,4]],[3,[1,3]]],[[[5,5],1],9]],
+[[6,[[7,3],[3,2]]],[[[3,8],[5,7]],4]],
+[[[[5,4],[7,7]],8],[[8,3],8]],
+[[9,3],[[9,9],[6,[4,9]]]],
+[[2,[[7,7],7]],[[5,8],[[9,3],[0,2]]]],
+[[[[5,2],5],[8,[3,7]]],[[5,[7,5]],[4,4]]],
+];
+
+const copyArray = a => {
+  return JSON.parse(JSON.stringify(a));
+}
+
+const part2Input = puzzleInput.map(JSON.parse);
+
+const wtf = magnitude(addAndReduceSnailFish(sampleInput[8],sampleInput[0]));
+log("wtf", wtf);
+const magnitudes = [];
+for (let i=0; i<part2Input.length; i++) {
+  for (let j=0; j<part2Input.length; j++) {
+    if (i !== j) {
+      const a = copyArray(part2Input[i]);
+      const b = copyArray(part2Input[j]);
+      magnitudes.push(magnitude(addAndReduceSnailFish(a,b)));
+      //magnitudes.push(magnitude(addAndReduceSnailFish(b,a)));
+    };
+  }
+}
+magnitudes.sort((a,b)=>b-a);
+const part2 = magnitudes[0];
+log("part 2", part2);
