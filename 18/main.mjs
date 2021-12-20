@@ -111,11 +111,6 @@ log("part 1", part1);
 
 // part 2
 
-// I can't get the same answer for this sample input
-// that is given in the instructions, but my real answer
-// for part 2 is correct.  My answer for this sample data is 4087 but
-// the instructions give 3993.  But when I add the 2 numbers
-// given in the instructions I get 3993. Hmm.
 const sampleInput = [
 [[[0,[5,8]],[[1,7],[9,6]]],[[4,[1,2]],[[1,4],2]]],
 [[[5,[2,8]],4],[5,[[9,9],0]]],
@@ -149,7 +144,6 @@ for (let i=0; i<part2Input.length; i++) {
       const a = cloneArray(part2Input[i]);
       const b = cloneArray(part2Input[j]);
       magnitudes.push(magnitude(addAndReduceSnailFish(a,b)));
-      magnitudes.push(magnitude(addAndReduceSnailFish(b,a)));
     };
   }
 }
